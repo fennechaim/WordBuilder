@@ -86,8 +86,10 @@ public class WordManager extends BaseWord {
 
     @Override
     public void undo() {
-        undolist.add(list.getLast());
-        list.removeLast();
+        if (list.size()>0) {
+            undolist.add(list.getLast());
+            list.removeLast();
+        }
     }
 
     @Override
@@ -97,8 +99,10 @@ public class WordManager extends BaseWord {
 
     @Override
     public void redo() {
-        list.add(undolist.getLast());
-        undolist.removeLast();
+        if (undolist.size()>0) {
+            list.add(undolist.getLast());
+            undolist.removeLast();
+        }
     }
 
 
