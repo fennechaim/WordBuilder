@@ -2,8 +2,10 @@ package com.haimbentouza.wordbuilder.manager;
 
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
+
 @Component
-public class WordManager extends BaseWord {
+public class WordManager implements IWordManager {
     private final String STARTBOLD = "<b>";
     private final String ENDBOLD = "</b>";
 
@@ -13,10 +15,13 @@ public class WordManager extends BaseWord {
     private final String STARTUNDERLINE = "<u>";
     private final String ENDTUNDERLINE = "</u>";
 
+    private final LinkedList<String> list = new LinkedList<>();
+    private final LinkedList<String> redolist = new LinkedList<>();
+
 
     @Override
     public void add(String stringToAdd, int position) {
-        super.initIndexView();
+        initIndexView();
         if (list.size() == 0) {
             list.add(0, stringToAdd);
         } else {
@@ -29,7 +34,7 @@ public class WordManager extends BaseWord {
 
     @Override
     public void remove(int fromPos, int toPos) {
-        super.initIndexView();
+        initIndexView();
         if (list.size() != 0) {
             StringBuilder sb = new StringBuilder(list.getLast());
             sb.delete(fromPos, toPos);
@@ -42,7 +47,7 @@ public class WordManager extends BaseWord {
 
     @Override
     public void bold(int fromPos, int toPos) {
-        super.initIndexView();
+        initIndexView();
         if (list.size() != 0) {
             StringBuilder sb = new StringBuilder(list.getLast());
 
@@ -57,7 +62,7 @@ public class WordManager extends BaseWord {
 
     @Override
     public void italic(int fromPos, int toPos) {
-        super.initIndexView();
+        initIndexView();
         if (list.size() != 0) {
             StringBuilder sb = new StringBuilder(list.getLast());
 
@@ -72,7 +77,7 @@ public class WordManager extends BaseWord {
 
     @Override
     public void uderline(int fromPos, int toPos) {
-        super.initIndexView();
+        initIndexView();
         if (list.size() != 0) {
             StringBuilder sb = new StringBuilder(list.getLast());
 
@@ -87,7 +92,7 @@ public class WordManager extends BaseWord {
     @Override
     public void undo() {
         if (list.size()>0) {
-            undolist.add(list.getLast());
+            redolist.add(list.getLast());
             list.removeLast();
         }
     }
@@ -99,10 +104,14 @@ public class WordManager extends BaseWord {
 
     @Override
     public void redo() {
-        if (undolist.size()>0) {
-            list.add(undolist.getLast());
-            undolist.removeLast();
+        if (redolist.size()>0) {
+            list.add(redolist.getLast());
+            redolist.removeLast();
         }
+    }
+
+    private void initIndexView() {
+        redolist.clear();
     }
 
 
